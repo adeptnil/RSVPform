@@ -1,22 +1,30 @@
+//libraries Importing
 const express = require('express');
 const mongoose = require('mongoose');
 
+//initialize application
 const app = express();
 const port = 3000;
-mongoose.connect('mongodb://localhost/rsvp');
 
+
+
+
+//application settings and middleware
 app.set('views', './views');
 app.set('view engine', 'pug');
-
 app.use(express.static('./public'));
 app.use(express.urlencoded({extended: true}));
 
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-    console.log('hello from database');
-});
 
+
+// const db = mongoose.connection;
+// db.on('error', console.error.bind(console, 'connection error:'));
+// db.once('open', function() {
+//     console.log('hello from database');
+// });
+
+
+//Model or Models
 const rsvpSchema = mongoose.Schema({
     name: String,
     email: String,
@@ -27,6 +35,7 @@ const rsvpSchema = mongoose.Schema({
 const Person = mongoose.model('Person', rsvpSchema);
 
 
+//Routes
 app.get('/', (req, res) => {
     res.render('index')
 });
@@ -69,4 +78,9 @@ app.get('/guests', (req, res) => {
       
 })
 
-app.listen(3000, () => console.log('Example app listening on port 3000!'))
+
+//Start Server
+app.listen(3000, () => {
+    mongoose.connect('mongodb://localhost/rsvp');
+    console.log('Example app listening on port 3000!');
+})
